@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: house-panda-protocol
+    runtime: python
+    buildCommand: pip install -r app/requirements.txt
+    startCommand: streamlit run app/bonding_curve_app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.6"
