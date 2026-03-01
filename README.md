@@ -6,29 +6,33 @@
 
 ## Overview
 
-House Panda Protocol is an AI-managed token lending mechanism where market makers borrow tokens directly from a bonding curve rather than purchasing them. The curve simultaneously determines price, lending rate, and AI development allocation.
+House Panda Protocol is an AI-managed token lending mechanism where market makers borrow tokens directly from a convex bonding curve rather than purchasing them. The curve simultaneously serves as price discovery, treasury, and liquidity backstop.
 
 **Core Thesis:** The bonding curve is the mechanism. LLMs are the management. NVIDIA is the infrastructure. The bet is that all three improve over time.
+
+**Key Innovation:** MMs borrow, not buy. They're exposed to spread risk, not directional risk. This means MMs will provide liquidity for any token on the platform — because they don't need to believe in it.
 
 ## Architecture
 
 ```
-Bonding Curve (immutable smart contract)
-    ├── Price: P = k × S^n
-    ├── Lending Rate: f(curve position, market cap)
-    ├── AI Allocation: 50% at launch → 15% floor
-    └── Default Response: permanent upward curve shift
+Convex Elliptical Bonding Curve
+    ├── Price: p(s) = P_max × (1 - √(1 - (s/S_max)²))
+    ├── MM Borrowing: collateral → borrow → provide liquidity → pay interest
+    ├── Fee System: curve-linked dynamic fees + flat operational fees
+    └── Reserves: mathematically impossible to drain (dp/ds → ∞ as s → S_max)
 
-Inference Bank (countercyclical reserve)
-    ├── Surplus accumulates when income > AI spend
-    ├── AI draws from reserve when income drops
-    └── Development never stops
+5-Step Platform Evolution
+    ├── Step 1: Launch own token on own curve (proof of concept)
+    ├── Step 2: Open curve to other tokens (launchpad)
+    ├── Step 3: Add new curve types (multi-curve platform)
+    ├── Step 4: Open all curves to others (curve-as-a-service)
+    └── Step 5: Unify liquidity pool (protocol)
 
-AI Layer (NVIDIA stack)
-    ├── AgentIQ — multi-agent orchestration
-    ├── NIM — inference microservices
-    ├── NeMo — model lifecycle management
-    └── Output = GitHub commits (public, 3-month delay)
+AI Infrastructure (Hybrid)
+    ├── MiniMax M2.5 agents — routine coding, CI/CD, tests (~$1K/month)
+    ├── Claude API — architecture, strategic reasoning (~$600/month)
+    ├── DGX Spark — always-on protocol inference (~$333/month amortized)
+    └── Output = GitHub commits (verifiable AI artifacts)
 ```
 
 ## Interactive Explorer
@@ -41,14 +45,30 @@ streamlit run app/bonding_curve_app.py
 
 ## Documentation
 
+### Core Design
+| Document | Description |
+|----------|-------------|
+| [**Protocol Design**](docs/protocol-design.md) | Full mechanism design — elliptical curve math, MM borrowing, obligation framework, fee architecture, revenue model, anti-manipulation analysis, Uniswap differentiation, 5-step platform evolution |
+| [MM Protection Framework](docs/mm-protection-framework.md) | 5-layer defense against MM lending extraction |
+| [Securities & ETF Readiness](docs/securities-etf-checklist.md) | Howey test avoidance and ETF prerequisites |
+
+### Strategy
+| Document | Description |
+|----------|-------------|
+| [Asian ETF Strategy](docs/asian-etf-strategy.md) | Asia-first benchmark infrastructure positioning |
+| [Competitive Landscape](docs/asian-competitive-landscape.md) | Asian token projects and HPT positioning |
+| [World Models Roadmap](docs/world-models-roadmap.md) | Expansion from LLMs to financial world models |
+
+### AI Infrastructure
+| Document | Description |
+|----------|-------------|
+| [**AI Infrastructure Costs**](docs/ai-infrastructure-costs.md) | MiniMax M2.5 pricing, $200/month per-agent economics, hybrid architecture (M2.5 + Claude + DGX Spark) |
+| [DGX Spark Analysis](docs/dgx-spark-analysis.md) | Hardware specs, coding benchmarks, API vs local comparison, competitive landscape |
+
+### Planning
 | Document | Description |
 |----------|-------------|
 | [V6 Action Items](docs/v6-action-items.md) | All pending additions for next documentation iteration |
-| [Asian ETF Strategy](docs/asian-etf-strategy.md) | Asia-first benchmark infrastructure positioning |
-| [MM Protection Framework](docs/mm-protection-framework.md) | 5-layer defense against lending extraction |
-| [World Models Roadmap](docs/world-models-roadmap.md) | Expansion from LLMs to financial world models |
-| [Securities &amp; ETF Readiness](docs/securities-etf-checklist.md) | Howey test avoidance and ETF prerequisites |
-| [Competitive Landscape](docs/asian-competitive-landscape.md) | Asian token projects and HPT positioning |
 
 ## Venue Strategy (Asia-First)
 
