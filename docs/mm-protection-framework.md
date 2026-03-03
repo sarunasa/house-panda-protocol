@@ -26,7 +26,30 @@ Collateral marked to market continuously. If HPT appreciates 20%, requirement in
 
 Collateral maintained at **60-70% of current token value** (not borrowing-time value). Default profitable only above ~2.5-3x appreciation, with margin calls forcing continuous top-ups.
 
-**Oracle question:** Curve price (deterministic but manipulable) vs exchange market price (real but needs oracle) vs hybrid TWAP.
+### Margin Call Oracle — Price Source Resolution
+
+**The problem:** The margin call mechanism requires a reliable price to determine when to demand additional collateral. Both available price sources are manipulable by the MM:
+
+| Price Source | Manipulation Vector |
+|-------------|-------------------|
+| **Curve price** | MM temporarily deposits tokens back into the curve to suppress the price reading, avoids margin call trigger, then withdraws. Cheap to execute in the flat zone. Deterministic but gameable. |
+| **Exchange market price** | MM wash trades or spoofs on the exchange to temporarily crash the visible price. Illegal in most jurisdictions but enforcement is patchy in crypto. The MM literally controls the order book as primary liquidity provider. |
+
+**The deeper problem:** The MM is the entity most capable of manipulating *either* price. They sit on both sides — controlling curve activity (as borrower) and exchange activity (as market maker). Any single price source gives them a lever.
+
+**Resolution: Contractual TWAP with dispute terms.**
+
+Since borrowing will be contractual at first (referring mathematically to the bonding curve but not implemented on-chain initially), the margin call trigger is defined as:
+
+- **Weighted average price** across multiple independent price sources (e.g., 3+ exchanges or aggregators where HPT trades)
+- **24-hour rolling window** — momentary manipulation gets averaged out
+- **Dispute resolution terms** built into the lending contract — if MM contests a margin call, defined arbitration process applies
+
+This means manipulation has to be **sustained across multiple venues for 24+ hours** to succeed, which is dramatically more expensive and visible than gaming a single source in a single block.
+
+**Future migration path:** As the protocol matures and moves on-chain, the contractual TWAP transitions to a Chainlink-style oracle aggregation or a custom TWAP oracle reading from multiple DEX pools. The contractual version serves as the specification for what the on-chain version must replicate.
+
+**Open item for legal review:** The lending contract should specify exact price sources, weighting methodology, margin call notification procedure, cure period, and dispute resolution venue. Securities lawyer should review.
 
 ## Layer 2: Restricted Token Custody
 
@@ -63,4 +86,4 @@ A rogue MM would need to: defeat transfer restrictions (L2) within margin call w
 
 ---
 
-*Last updated: 2026-02-28*
+*Last updated: 2026-03-03*
